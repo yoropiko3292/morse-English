@@ -25,9 +25,9 @@ function wordToMorse() {
 		if(code in MORSE_CODE){
 			word = " " + MORSE_CODE[code];
 		}else if(code == "\n" || code == "\r" || code == " ") {
-			word = "/";
+			word = " /";
 		}else{
-			word = "□";
+			word = " □";
 		}
 		result += word;
 	}
