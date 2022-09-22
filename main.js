@@ -1,9 +1,7 @@
 const inputWord = document.getElementById("inputWord");
-const ouputMorse = document.getElementById("ouputMorse");
 const inputMorse = document.getElementById("inputMorse");
-const ouputWord = document.getElementById("ouputWord");
-const intoMorse = document.getElementById("intoMorse");
-const intoWord = document.getElementById("intoWord");
+const copyMorse = document.getElementById("copyMorse");
+const copyWord = document.getElementById("copyWord");
 
 const MORSE_CODE = {
 A:".-",B:"-...",C:"-.-.",D:"-..",E:".",F:"..-.",G:"--.",H:"....",I:"..",J:".---",
@@ -15,6 +13,7 @@ T:"-",U:"..-",V:"...-",W:".--",X:"-..-",Y:"-.--",Z:"--..",
 }
 
 function wordToMorse() {
+
 	let memo = inputWord.value.toUpperCase();
 	let word;
           let result = "";
@@ -23,42 +22,65 @@ function wordToMorse() {
 		code = memo[i];
 		word = "";
 		if(code in MORSE_CODE){
-			word = " " + MORSE_CODE[code];
+			word = MORSE_CODE[code];
 		}else if(code == "\n" || code == "\r" || code == " ") {
-			word = " /";
+			word = "";
 		}else{
-			word = " □";
+			word = "□";
 		}
-		result += word;
+		result += " " + word;
 	}
-	outputMorse.textContent = "結果:" + result;
+	memo = result;
+	result = "";
+          for(i = 1;i < memo.length;i++){
+		result += memo[i];
+	}
+	inputMorse.value = result;
 }
 
 function morseToWord() {
 	let memo = inputMorse.value.toUpperCase();
-          let keys = Object.keys(MORSE_CODE);
+	let keys = Object.keys(MORSE_CODE);
 	let word;
-          let result = "";
+	let result = "";
 	let code;
           for(i = 0;i < memo.length;i++){
 		word = "";
 		code = "";
+		if(memo[i] == "\r" || memo[i] == "\n" || memo[i] == " "){
+			code = " ";
+		}
 		while(memo[i] != " " && memo[i] != "　" && memo[i] != "\r" && memo[i] != "\n" && i < memo.length){
 			word += memo[i];
-                              i++;
+			i++;
 		}
 		for(j = 0;j < keys.length;j++){
 			if(MORSE_CODE[keys[j]] == word){
-				code = keys[j];
+				code += keys[j];
 			}
-		}
-		if(memo[i] == "\r" && memo[i] == "\n"){
-			code += " ";
 		}
 		result += code;
 	}
-	outputWord.textContent = "結果:" + result;
+	inputWord.value = result;
 }
 
-intoMorse.addEventListener("click",wordToMorse);
-intoWord.addEventListener("click",morseToWord);
+function MorseSave() {
+	inputMorse.select();
+	document.execCommand("copy");
+}
+
+function WordSave() {
+	inputWord.select();
+	document.execCommand("copy");
+}
+
+inputWord.addEventListener("keyup",wordToMorse);
+inputMorse.addEventListener("keyup",morseToWord);
+inputWord.addEventListener("paste", function(){
+	setTimeout(wordToMorse,10);
+});
+inputMorse.addEventListener("paste", function(){
+	setTimeout(morseToWord,10);
+});
+copyMorse.addEventListener("click",MorseSave);
+copyWord.addEventListener("click",WordSave);
